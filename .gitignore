@@ -1,0 +1,6 @@
+node_modules/
+dist/
+packages/browser-extension/bundle.js
+packages/desktop-loader/inject.bundle.js
+*.log
+.DS_Store

@@ -1,0 +1,15 @@
+{
+  "name": "element-polyglot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:extension": "esbuild packages/core/fallback-entry.js --bundle --outfile=packages/browser-extension/bundle.js --format=iife",
+    "build:desktop": "esbuild packages/core/fallback-entry.js --bundle --outfile=packages/desktop-loader/inject.bundle.js --format=iife",
+    "build:web-module": "esbuild packages/web-module/index.js --bundle --outfile=dist/polyglot-module.js --format=esm --external:@element-hq/element-web-module-api"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0",
+    "@element-hq/element-web-module-api": "1.5.0"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Element Polyglot",
+  "version": "0.1.0",
+  "description": "Translate outgoing messages on send, and translate others' messages from the hover menu, in Element.",
+  "permissions": [],
+  "host_permissions": [
+    "https://app.element.io/*",
+    "https://translate.googleapis.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://app.element.io/*"],
+      "js": ["bundle.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
