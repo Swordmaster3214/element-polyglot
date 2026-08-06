@@ -95,7 +95,7 @@ content, not off on another origin.
   sudo cp dist/polyglot-module.js /usr/share/webapps/element/polyglot-module.js
   ```
   ```json
-  { "modules": ["/webapp/polyglot-module.js"] }
+  { "modules": ["/polyglot-module.js"] }
   ```
   If the webapp is bundled inside `app.asar` instead (more common
   upstream), the same extract/add/repack technique as the patch below
