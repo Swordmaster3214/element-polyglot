@@ -55,7 +55,7 @@ You'll also need to place `polyglot-module.js` somewhere Element is
 allowed to load scripts from (its own served content - Element's
 security policy blocks loading scripts from elsewhere, including a
 plain file path or localhost). Where exactly that is varies by how
-Element was packaged on your system; see `DEVELOPMENT.md` for how to
+Element was packaged on your system; when using the native Linux package use `/usr/lib/element/webapp`. see `DEVELOPMENT.md` for how to
 find it if it's not obvious. Once you've placed the file, reference it
 in `config.json` the same way as above.
 
