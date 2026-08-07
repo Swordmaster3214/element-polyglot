@@ -163,7 +163,11 @@ export function initOutgoingTranslateHook() {
 
             let translated = original;
             try {
-                const result = await translate(original, settings.outgoingTargetLang);
+                const result = await translate(
+                    original,
+                    settings.outgoingTargetLang,
+                    settings.outgoingSourceLang,
+                );
                 translated = result.translated;
                 console.log(
                     "[element-polyglot][outgoing] translated to:",

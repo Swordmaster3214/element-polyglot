@@ -9,10 +9,12 @@ const KEY = "element-polyglot:settings";
 const DEFAULTS = {
     // translate my outgoing messages before sending
     autoTranslateOutgoing: false,
+    outgoingSourceLang: "auto",
     outgoingTargetLang: "es",
 
     // show a "Translate to English" item in the message hover menu
     incomingHoverTranslate: true,
+    incomingSourceLang: "auto",
     incomingTargetLang: "en",
 };
 

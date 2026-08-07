@@ -72,3 +72,8 @@ export const LANGUAGES = [
     { code: "tr", name: "Turkish" },
     { code: "vi", name: "Vietnamese" },
 ];
+
+export const SOURCE_LANGUAGES = [
+{ code: "auto", name: "Detect language" },
+...LANGUAGES,
+];

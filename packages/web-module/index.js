@@ -44,7 +44,7 @@
  *      about React-controlled contenteditable state.
  */
 
-import { translate, LANGUAGES } from "../core/translate.js";
+import { translate, LANGUAGES, SOURCE_LANGUAGES } from "../core/translate.js";
 import { getSettings, setSettings } from "../core/settings.js";
 import { initOutgoingTranslateHook } from "../core/dom.js";
 
@@ -80,6 +80,7 @@ function TranslateToggle({ mxEvent }) {
             const { translated, detectedSourceLang } = await translate(
                 body,
                 settings.incomingTargetLang,
+                settings.incomingSourceLang,
             );
             setState({ status: "shown", translated, detectedSourceLang });
         } catch (err) {
@@ -149,11 +150,17 @@ function SettingsDialogBody({ onSubmit, onCancel }) {
     const [autoTranslateOutgoing, setAutoTranslateOutgoing] = React.useState(
         initial.autoTranslateOutgoing,
     );
+    const [outgoingSourceLang, setOutgoingSourceLang] = React.useState(
+        initial.outgoingSourceLang,
+    );
     const [outgoingTargetLang, setOutgoingTargetLang] = React.useState(
         initial.outgoingTargetLang,
     );
     const [incomingHoverTranslate, setIncomingHoverTranslate] = React.useState(
         initial.incomingHoverTranslate,
+    );
+    const [incomingSourceLang, setIncomingSourceLang] = React.useState(
+        initial.incomingSourceLang,
     );
     const [incomingTargetLang, setIncomingTargetLang] = React.useState(
         initial.incomingTargetLang,
@@ -162,17 +169,36 @@ function SettingsDialogBody({ onSubmit, onCancel }) {
     function handleSave() {
         onSubmit({
             autoTranslateOutgoing,
+            outgoingSourceLang,
             outgoingTargetLang,
             incomingHoverTranslate,
+            incomingSourceLang,
             incomingTargetLang,
         });
     }
 
-    const languageOptions = LANGUAGES.map((l) =>
-        React.createElement("option", { key: l.code, value: l.code }, l.name),
+    const targetLanguageOptions = LANGUAGES.map((l) =>
+    React.createElement("option", { key: l.code, value: l.code }, l.name),
+    );
+    const sourceLanguageOptions = SOURCE_LANGUAGES.map((l) =>
+    React.createElement("option", { key: l.code, value: l.code }, l.name),
     );
 
-    function section(checkboxLabel, checked, onCheckedChange, selectLabel, selectValue, onSelectChange) {
+    // Renders one settings section: a checkbox, then a "From" select
+    // (source language, includes "Detect language") and a "To" select
+    // (target language, no auto option - you have to pick something to
+    // translate into). Both dropdowns are shown regardless of the
+    // checkbox state, just dimmed, so the values aren't lost if someone
+    // unchecks and rechecks the box.
+    function section(
+        checkboxLabel,
+        checked,
+        onCheckedChange,
+        sourceValue,
+        onSourceChange,
+        targetValue,
+        onTargetChange,
+    ) {
         return React.createElement(
             "div",
             { style: { marginBottom: 20 } },
@@ -193,17 +219,37 @@ function SettingsDialogBody({ onSubmit, onCancel }) {
                         marginTop: 8,
                         marginLeft: 24,
                         opacity: checked ? 1 : 0.5,
+                        display: "flex",
+                        gap: 16,
                     },
                 },
-                selectLabel + " ",
                 React.createElement(
-                    "select",
-                    {
-                        value: selectValue,
-                        disabled: !checked,
-                        onChange: (e) => onSelectChange(e.target.value),
-                    },
-                    languageOptions,
+                    "span",
+                    null,
+                    "From: ",
+                    React.createElement(
+                        "select",
+                        {
+                            value: sourceValue,
+                            disabled: !checked,
+                            onChange: (e) => onSourceChange(e.target.value),
+                        },
+                        sourceLanguageOptions,
+                    ),
+                ),
+                React.createElement(
+                    "span",
+                    null,
+                    "To: ",
+                    React.createElement(
+                        "select",
+                        {
+                            value: targetValue,
+                            disabled: !checked,
+                            onChange: (e) => onTargetChange(e.target.value),
+                        },
+                        targetLanguageOptions,
+                    ),
                 ),
             ),
         );
@@ -216,7 +262,8 @@ function SettingsDialogBody({ onSubmit, onCancel }) {
             "Show translate link under incoming messages",
             incomingHoverTranslate,
             setIncomingHoverTranslate,
-            "Translate to:",
+            incomingSourceLang,
+            setIncomingSourceLang,
             incomingTargetLang,
             setIncomingTargetLang,
         ),
@@ -224,7 +271,8 @@ function SettingsDialogBody({ onSubmit, onCancel }) {
             "Automatically translate my messages before sending",
             autoTranslateOutgoing,
             setAutoTranslateOutgoing,
-            "Translate to:",
+            outgoingSourceLang,
+            setOutgoingSourceLang,
             outgoingTargetLang,
             setOutgoingTargetLang,
         ),
@@ -232,11 +280,11 @@ function SettingsDialogBody({ onSubmit, onCancel }) {
             "div",
             { style: { display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 8 } },
             React.createElement("button", { type: "button", onClick: onCancel }, "Cancel"),
-            React.createElement(
-                "button",
-                { type: "button", onClick: handleSave, style: { fontWeight: 600 } },
-                "Save",
-            ),
+                            React.createElement(
+                                "button",
+                                { type: "button", onClick: handleSave, style: { fontWeight: 600 } },
+                                "Save",
+                            ),
         ),
     );
 }
@@ -280,7 +328,7 @@ export default class PolyglotModule {
         // fastest way to confirm during testing whether a freshly copied
         // file actually replaced the one Element has loaded, versus a
         // stale cached/leftover copy still being served.
-        console.log("[element-polyglot] module loaded - build 2026-07-r5 (settings dialog via space panel item)");
+        console.log("[element-polyglot] module loaded - build 2026-08-r1 (from/to language selection)");
     }
 
     openSettings() {
